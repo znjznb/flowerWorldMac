@@ -42,7 +42,7 @@ xcodebuild -project "花花世界.xcodeproj" \
            -derivedDataPath build/DerivedData \
            build
 
-APP_PATH="build/DerivedData/Build/Products/Release/花花世界.app"
+APP_PATH=$(find "build/DerivedData/Build/Products/Release" -name "*.app" -type d 2>/dev/null | head -1)
 
 if [ -d "$APP_PATH" ]; then
     echo ""
