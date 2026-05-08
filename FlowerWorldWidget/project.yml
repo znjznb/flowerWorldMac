@@ -1,6 +1,7 @@
 name: 花花世界
 options:
   bundleIdPrefix: com.flowerworld
+  xcodeVersion: "15.0"
   deploymentTarget:
     macOS: "13.0"
 settings:
