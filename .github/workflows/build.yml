@@ -52,12 +52,14 @@ jobs:
       - name: Package .app as ZIP
         working-directory: FlowerWorldWidget
         run: |
-          APP_PATH="build/DerivedData/Build/Products/Release/花花世界.app"
+          APP_PATH=$(find build/DerivedData -name "*.app" -type d -path "*/Release/*" 2>/dev/null | head -1)
           if [ -d "$APP_PATH" ]; then
+            echo "📦 找到 .app: $APP_PATH"
             ditto -c -k --keepParent "$APP_PATH" "花花世界.zip"
             echo "✅ 打包成功"
           else
-            echo "❌ 未找到 .app"
+            echo "❌ 未找到 .app (搜索路径: build/DerivedData)"
+            find build/DerivedData -type d -name "*.app" 2>/dev/null || echo "(无 .app 文件)"
             exit 1
           fi
 
