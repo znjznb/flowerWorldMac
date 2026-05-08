@@ -1,20 +1,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject var settings: SettingsViewModel
-    @Environment(\.dismiss) var dismiss
+    @Binding var url: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("设置")
-                .font(.title2)
-                .fontWeight(.bold)
-
             VStack(alignment: .leading, spacing: 6) {
                 Text("后端服务地址")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                TextField("http://localhost:8080", text: $settings.backendURL)
+                TextField("http://localhost:8080", text: $url)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: .infinity)
             }
@@ -24,15 +19,8 @@ struct SettingsView: View {
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            HStack {
-                Spacer()
-                Button("关闭") {
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-            }
+            Spacer()
         }
         .padding(20)
-        .frame(width: 380)
     }
 }
