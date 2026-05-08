@@ -1,0 +1,24 @@
+name: 花花世界
+options:
+  bundleIdPrefix: com.flowerworld
+  deploymentTarget:
+    macOS: "13.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  FlowerWorldWidget:
+    type: application
+    platform: macOS
+    sources:
+      - "*.swift"
+      - Info.plist
+      - index.html
+      - Assets.xcassets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.flowerworld.menubar
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "5.9"

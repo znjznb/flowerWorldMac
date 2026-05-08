@@ -1,0 +1,812 @@
+<!DOCTYPE html> 
+ <html lang="zh-CN"> 
+ <head> 
+     <meta charset="UTF-8"> 
+     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+     <title>花花世界 - 个人工具箱</title>
+    <meta name="version" content="v2-2026-05-06-1732"> 
+     <style> 
+         /* --- 基础样式重置与变量 --- */ 
+         :root { 
+             --primary-color: #4CAF50; /* 绿色主色调 */ 
+             --secondary-color: #45a049; 
+             --bg-color: #f9f9f9; 
+             --sidebar-bg: #ffffff; 
+             --text-color: #333333; 
+             --text-light: #666666; 
+             --border-color: #e0e0e0; 
+             --chat-user-bg: #e8f5e9; 
+             --chat-bot-bg: #f0f0f0; 
+             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+             --radius-lg: 16px; 
+             --radius-sm: 8px; 
+         } 
+ 
+         * { 
+             margin: 0; 
+             padding: 0; 
+             box-sizing: border-box; 
+         } 
+         body { 
+             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+             background-color: var(--bg-color); 
+             color: var(--text-color); 
+             height: 100vh; 
+             overflow: hidden; 
+             display: flex; 
+         } 
+         
+         /* --- 侧边栏 (Sidebar) --- */ 
+         .sidebar { 
+             position: fixed; 
+             top: 0; left: 0; bottom: 0; 
+             width: 260px; 
+             background: var(--sidebar-bg); 
+             border-right: 1px solid var(--border-color); 
+             display: flex; 
+             flex-direction: column; 
+             padding: 20px; 
+             z-index: 1000; 
+             transform: translateX(-100%); 
+             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+             box-shadow: var(--shadow); 
+         } 
+         .sidebar.open { transform: translateX(0); } 
+         .brand { 
+             font-size: 24px; 
+             font-weight: 700; 
+             color: var(--primary-color); 
+             margin-bottom: 40px; 
+             display: flex; 
+             align-items: center; 
+             gap: 10px; 
+         } 
+         .brand span { font-size: 28px; } 
+
+         .session-list {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         .nav-item { 
+             padding: 12px 16px; 
+             border-radius: var(--radius-sm); 
+             color: var(--text-light); 
+             font-size: 15px; 
+             margin-bottom: 8px; 
+             cursor: pointer; 
+             transition: all 0.2s; 
+         } 
+         .nav-item:hover, .nav-item.active { 
+             background-color: var(--chat-user-bg); 
+             color: var(--primary-color); 
+             font-weight: 600; 
+         } 
+ 
+         /* --- 主内容区 (Main) --- */ 
+         .main-content { 
+             flex: 1; 
+             display: flex; 
+             flex-direction: column; 
+             position: relative; 
+             height: 100%; 
+             width: 100%; 
+         } 
+ 
+         /* --- 顶部栏 (Header) --- */ 
+         .mobile-header { 
+             padding: 15px 20px; 
+             background: var(--sidebar-bg); 
+             border-bottom: 1px solid var(--border-color); 
+             display: flex; 
+             align-items: center; 
+             flex-shrink: 0; 
+             justify-content: flex-start; 
+         } 
+         .menu-btn {
+             font-size: 24px;
+             cursor: pointer;
+             color: var(--text-color);
+             background: none;
+             border: none;
+             margin-right: 15px;
+         }
+
+         .new-chat-btn {
+             margin-left: auto; /* 将按钮推到最右边 */
+             padding: 8px 16px;
+             background-color: var(--primary-color);
+             color: white;
+             border: none;
+             border-radius: var(--radius-sm);
+             cursor: pointer;
+             font-size: 14px;
+             font-weight: 500;
+             transition: background-color 0.2s;
+         }
+         .new-chat-btn:hover {
+             background-color: var(--secondary-color);
+         } 
+ 
+         /* --- 聊天区域 (Chat) --- */ 
+         .chat-container { 
+             flex: 1; 
+             padding: 20px; 
+             padding-bottom: 120px; /* 为输入框预留空间 */ 
+             overflow-y: auto; 
+             display: flex; 
+             flex-direction: column; 
+             gap: 15px; 
+             scroll-behavior: smooth; 
+             transition: padding-top 0.5s ease; 
+             box-sizing: border-box; 
+         } 
+         .chat-container.has-content { 
+             padding-top: 100px; 
+         } 
+         .message { 
+             max-width: 80%; 
+             padding: 15px 20px; 
+             border-radius: var(--radius-lg); 
+             line-height: 1.6; 
+             font-size: 15px; 
+             animation: fadeIn 0.3s ease; 
+             word-break: break-word; 
+             white-space: pre-wrap; /* 自动处理换行符 */
+         } 
+         @keyframes fadeIn { 
+             from { opacity: 0; transform: translateY(10px); } 
+             to { opacity: 1; transform: translateY(0); } 
+         } 
+         .message.bot { 
+             align-self: flex-start; 
+             background-color: var(--chat-bot-bg); 
+             border-bottom-left-radius: 2px; 
+         } 
+         .message.user { 
+             align-self: flex-end; 
+             background-color: var(--chat-user-bg); 
+             color: #2e7d32; 
+             border-bottom-right-radius: 2px; 
+         } 
+         .message img { 
+             max-width: 100%; 
+             border-radius: 8px; 
+             margin-top: 10px; 
+             display: block; 
+         } 
+         .message table {
+             width: 100%;
+             border-collapse: collapse;
+             margin: 10px 0;
+             font-size: 14px;
+         }
+         .message th,
+         .message td {
+             border: 1px solid #ddd;
+             padding: 8px 12px;
+             text-align: left;
+         }
+         .message th {
+             background-color: #f5f5f5;
+             font-weight: 600;
+         }
+         .message tr:nth-child(even) {
+             background-color: #f9f9f9;
+         }
+         .message strong {
+             font-weight: 600;
+         }
+         .file-attachment { 
+             background: rgba(255,255,255,0.5); 
+             padding: 8px; 
+             border-radius: 6px; 
+             margin-top: 5px; 
+             font-size: 13px; 
+             display: flex; 
+             align-items: center; 
+             gap: 5px; 
+         } 
+         .file-preview {
+             padding: 0 12px 10px 52px;
+             color: var(--text-light);
+             font-size: 13px;
+             display: none;
+             align-items: center;
+             gap: 8px;
+         }
+         .file-preview.active {
+             display: flex;
+         }
+         .file-clear-btn {
+             border: none;
+             background: transparent;
+             color: var(--text-light);
+             cursor: pointer;
+             font-size: 16px;
+             line-height: 1;
+         }
+ 
+         /* --- 输入区域 (Input) --- */ 
+         .input-area { 
+            position: absolute; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%; 
+            max-width: 500px; 
+            background: var(--sidebar-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); 
+            z-index: 10; 
+            overflow: hidden; 
+            transition: all 0.5s ease; 
+        }
+        
+        .input-area.center {
+            bottom: 50%;
+            transform: translate(-50%, 50%);
+        } 
+
+        /* 移动端响应式样式 */
+        @media screen and (max-width: 768px) {
+            .input-area {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: none;
+                width: 100%;
+                max-width: none;
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                border-bottom: none;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            }
+            
+            .input-area.center {
+                bottom: 50%;
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, 50%);
+                width: 90%;
+                max-width: 500px;
+                border-radius: var(--radius-lg);
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: var(--shadow);
+            }
+            
+            /* 确保聊天区域不被输入框遮挡 */
+            .chat-container {
+                padding-bottom: 100px;
+            }
+        }
+
+         /* 修复了内部布局，使用 Flexbox 确保元素对齐 */ 
+         .input-wrapper { 
+             display: flex; 
+             align-items: center; 
+             gap: 10px; 
+             padding: 10px; 
+         } 
+ 
+         /* 隐藏原生文件输入框 */ 
+         #fileInput { 
+             display: none; 
+         } 
+ 
+         /* 曲别针按钮样式 */ 
+         .attachment-btn { 
+             padding: 10px; 
+             border-radius: 50%; 
+             cursor: pointer; 
+             color: var(--text-light); 
+             transition: all 0.2s; 
+             display: flex; 
+             align-items: center; 
+             justify-content: center; 
+         } 
+         .attachment-btn:hover { 
+             background-color: #f0f0f0; 
+             color: var(--primary-color); 
+         } 
+ 
+         /* 输入框样式 */ 
+         .chat-input { 
+             flex: 1; 
+             padding: 12px 15px; 
+             border: 1px solid var(--border-color); 
+             border-radius: var(--radius-lg); 
+             outline: none; 
+             font-size: 15px; 
+             background: transparent; /* 确保背景透明，不遮挡 */ 
+             resize: none; /* 禁止用户手动调整大小 */
+             overflow-y: hidden; /* 隐藏滚动条 */
+             min-height: 48px; /* 初始高度 */
+             max-height: 200px; /* 最大高度 */
+         } 
+         .chat-input:focus { 
+             border-color: var(--primary-color); 
+         } 
+ 
+         /* 发送按钮 */ 
+         .send-btn { 
+             padding: 10px 20px; 
+             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); 
+             color: white; 
+             border: none; 
+             border-radius: var(--radius-lg); 
+             font-weight: 600; 
+             cursor: pointer; 
+             transition: opacity 0.2s; 
+         } 
+         .send-btn:hover { 
+             opacity: 0.9; 
+         } 
+ 
+         /* --- 遮罩层 --- */ 
+         .backdrop { 
+             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+             background: rgba(0,0,0,0.3); 
+             z-index: 999; 
+             opacity: 0; visibility: hidden; 
+             transition: all 0.3s; 
+         } 
+         .backdrop.active { opacity: 1; visibility: visible; }
+
+         /* 打字机光标效果 */
+         .cursor {
+             display: inline-block;
+             width: 8px;
+             height: 1em;
+             background-color: var(--text-color);
+             animation: blink 0.7s infinite;
+         }
+         @keyframes blink {
+             50% { opacity: 0; }
+         }
+
+     </style> 
+ </head> 
+ <body> 
+ 
+     <!-- 侧边栏 --> 
+     <nav class="sidebar" id="sidebar">
+         <div class="brand"><span>🥦</span> 花花世界</div>
+         <ul class="session-list" id="sessionList"></ul>
+     </nav> 
+ 
+     <!-- 遮罩层 --> 
+     <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div> 
+ 
+     <!-- 主体内容 --> 
+     <main class="main-content"> 
+         <!-- 头部 --> 
+         <header class="mobile-header">
+             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+             <div class="brand" style="margin:0; font-size: 20px;"><span>🥦</span> 花花世界</div>
+             <button class="new-chat-btn" onclick="startNewChat()">+ 新对话</button>
+         </header> 
+ 
+         <!-- 聊天记录 --> 
+         <div class="chat-container" id="chatContainer"> 
+             <div class="message bot">你好！我是花姐助手。欢迎来到花花世界。</div> 
+         </div> 
+ 
+         <!-- 输入框容器 --> 
+         <div class="input-area" id="inputArea"> 
+             <div class="input-wrapper"> 
+                 <!-- 文件上传按钮 (独立的 label) --> 
+                 <label for="fileInput" class="attachment-btn" title="上传文件"> 
+                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
+                         <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path> 
+                     </svg> 
+                 </label> 
+                 
+                 <!-- 隐藏的文件输入框 --> 
+                 <input type="file" id="fileInput" onchange="handleFileSelect(this)"> 
+ 
+                 <!-- 输入框 --> 
+                 <textarea class="chat-input" id="userInput" placeholder="输入消息..." oninput="adjustTextareaHeight()" onkeydown="handleKeyPress(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()" onblur="handleBlur()"></textarea> 
+ 
+                 <!-- 发送按钮 --> 
+                 <button class="send-btn" onclick="sendMessage()">发送</button> 
+             </div> 
+             <div class="file-preview" id="filePreview">
+                 <span id="filePreviewName"></span>
+                 <button class="file-clear-btn" type="button" onclick="clearSelectedFile()" title="移除文件">x</button>
+             </div>
+         </div> 
+     </main> 
+ 
+     <script>
+         // --- DOM Elements ---
+         const chatContainer = document.getElementById('chatContainer');
+         const userInput = document.getElementById('userInput');
+         const sidebar = document.getElementById('sidebar');
+         const backdrop = document.getElementById('backdrop');
+         const inputArea = document.getElementById('inputArea');
+         const sessionList = document.getElementById('sessionList');
+         const fileInput = document.getElementById('fileInput');
+         const filePreview = document.getElementById('filePreview');
+         const filePreviewName = document.getElementById('filePreviewName');
+
+         // --- State ---
+         let currentFile = null;
+         let activeSessionId = null;
+         let isComposing = false; // 标记是否正在使用输入法
+
+         // --- API Functions ---
+         const API_BASE_URL = '/api';
+
+         function appendTextWithBreaks(parent, text) {
+             const parts = text.split('\n');
+             parts.forEach((part, index) => {
+                 if (index > 0) parent.appendChild(document.createElement('br'));
+                 if (part) parent.appendChild(document.createTextNode(part));
+             });
+         }
+
+         // Markdown 表格转安全 DOM 片段
+         function markdownTableToFragment(text) {
+             const lines = text.split('\n');
+             let inTable = false;
+             const fragment = document.createDocumentFragment();
+             let table = null;
+             let tbody = null;
+             let paragraphBuffer = [];
+
+             function flushParagraph() {
+                 if (paragraphBuffer.length === 0) return;
+                 appendTextWithBreaks(fragment, paragraphBuffer.join('\n'));
+                 fragment.appendChild(document.createElement('br'));
+                 paragraphBuffer = [];
+             }
+             
+             for (let i = 0; i < lines.length; i++) {
+                 const line = lines[i];
+                 
+                 // 检测表格开始（包含 |）
+                 if (line.includes('|') && !inTable) {
+                     // 检查下一行是否是分隔线（包含 ---）
+                     if (lines[i+1] && lines[i+1].includes('|') && lines[i+1].includes('---')) {
+                         flushParagraph();
+                         inTable = true;
+                         table = document.createElement('table');
+                         const thead = document.createElement('thead');
+                         const tr = document.createElement('tr');
+                         // 解析表头
+                         const headers = line.split('|').filter(h => h.trim() !== '');
+                         headers.forEach(h => {
+                             const th = document.createElement('th');
+                             th.textContent = h.trim().replace(/\*\*/g, '');
+                             tr.appendChild(th);
+                         });
+                         thead.appendChild(tr);
+                         tbody = document.createElement('tbody');
+                         table.appendChild(thead);
+                         table.appendChild(tbody);
+                         i++; // 跳过分隔线
+                         continue;
+                     }
+                 }
+                 
+                 // 解析表格内容
+                 if (inTable && line.includes('|')) {
+                     const tr = document.createElement('tr');
+                     const cells = line.split('|').filter(c => c.trim() !== '');
+                     cells.forEach(c => {
+                         const td = document.createElement('td');
+                         td.textContent = c.trim().replace(/\*\*/g, '');
+                         tr.appendChild(td);
+                     });
+                     tbody.appendChild(tr);
+                     continue;
+                 }
+                 
+                 // 表格结束
+                 if (inTable && !line.includes('|')) {
+                     inTable = false;
+                     fragment.appendChild(table);
+                     table = null;
+                     tbody = null;
+                 }
+                 
+                 // 普通文本
+                 if (!inTable) {
+                     paragraphBuffer.push(line);
+                 }
+             }
+             
+             // 确保表格正确关闭
+             if (inTable && table) {
+                 fragment.appendChild(table);
+             }
+             flushParagraph();
+             
+             return fragment;
+         }
+
+         async function parseJsonResponse(response, fallbackMessage) {
+             if (!response.ok) {
+                 const detail = await response.text().catch(() => '');
+                 throw new Error(detail || fallbackMessage || `请求失败：${response.status}`);
+             }
+             return response.json();
+         }
+
+         async function apiGetAllSessions() {
+             const response = await fetch(`${API_BASE_URL}/sessions`);
+             return parseJsonResponse(response, '获取会话列表失败');
+         }
+
+         async function apiCreateSession() {
+             const response = await fetch(`${API_BASE_URL}/sessions`, { method: 'POST' });
+             return parseJsonResponse(response, '创建会话失败');
+         }
+
+         async function apiGetSessionHistory(sessionId) {
+             const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/history`);
+             return parseJsonResponse(response, '获取会话历史失败');
+         }
+
+         // --- UI Rendering ---
+         function renderSessionList(sessions) {
+             sessionList.innerHTML = '';
+             sessions.forEach(session => {
+                 const li = document.createElement('li');
+                 li.classList.add('nav-item');
+                 li.dataset.sessionId = session.id;
+                 li.textContent = session.name;
+                 li.onclick = () => switchSession(session.id);
+                 sessionList.appendChild(li);
+             });
+             updateActiveSessionUI();
+         }
+
+         function renderHistory(history) {
+             chatContainer.innerHTML = '';
+             if (history && history.messages) {
+                 history.messages.forEach(msg => {
+                     appendMessage(msg.content, msg.role);
+                 });
+             }
+         }
+
+         function appendMessage(text, sender) {
+             const div = document.createElement('div');
+             // 将 assistant 转换为 bot，确保样式正确应用
+             const messageType = sender === 'assistant' ? 'bot' : sender;
+             div.classList.add('message', messageType);
+             
+             // 如果是机器人消息，解析 Markdown 表格
+             if (sender === 'bot' || sender === 'assistant') {
+                 div.appendChild(markdownTableToFragment(text));
+             } else {
+                 div.textContent = text;
+             }
+             
+             chatContainer.appendChild(div);
+             setTimeout(() => chatContainer.scrollTop = chatContainer.scrollHeight, 100);
+             return div;
+         }
+
+         function updateActiveSessionUI() {
+             document.querySelectorAll('.session-list .nav-item').forEach(item => {
+                 item.classList.toggle('active', item.dataset.sessionId === activeSessionId);
+             });
+         }
+
+         // --- Core Logic & Event Handlers ---
+        async function initializeApp() {
+            try {
+                const sessions = await apiGetAllSessions();
+                inputArea.classList.add('center');
+                
+                 if (sessions && sessions.length > 0) {
+                     renderSessionList(sessions);
+                     await switchSession(sessions[0].id);
+                 } else {
+                     await startNewChat();
+                 }
+             } catch (error) {
+                 console.error('初始化失败:', error);
+                 chatContainer.innerHTML = '';
+                 appendMessage(`初始化失败：${error.message}`, 'bot');
+             }
+         }
+
+        async function switchSession(sessionId) {
+            if (activeSessionId === sessionId && chatContainer.children.length > 1) return;
+            activeSessionId = sessionId;
+            console.log('Switched to session:', sessionId);
+            updateActiveSessionUI();
+            
+            try {
+                // 调用后端接口加载历史记录
+                const history = await apiGetSessionHistory(sessionId);
+                if (history && history.messages && history.messages.length > 0) {
+                    renderHistory(history);
+                    // 有历史消息时，输入框移到底部
+                    inputArea.classList.remove('center');
+                } else {
+                    chatContainer.innerHTML = '';
+                    appendMessage('已切换到新对话。', 'bot');
+                    // 没有历史消息时，输入框居中
+                    inputArea.classList.add('center');
+                }
+             } catch (error) {
+                console.error('加载会话失败:', error);
+                chatContainer.innerHTML = '';
+                appendMessage(`加载会话失败：${error.message}`, 'bot');
+                inputArea.classList.add('center');
+             }
+         }
+
+         async function startNewChat() {
+             const newSession = await apiCreateSession();
+             const sessions = await apiGetAllSessions();
+             renderSessionList(sessions);
+             await switchSession(newSession.id);
+         }
+
+         async function sendMessage() {
+            const text = userInput.value.trim();
+            const selectedFile = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : currentFile;
+            if (!text && !selectedFile) return;
+            const promptText = text || (selectedFile && selectedFile.type.startsWith('image/')
+                ? '请描述这张图片'
+                : '请阅读这个文件并总结主要内容');
+            if (!activeSessionId) {
+                const newSession = await apiCreateSession();
+                if (newSession && newSession.id) {
+                    activeSessionId = newSession.id;
+                    const sessions = await apiGetAllSessions();
+                    renderSessionList(sessions);
+                    console.log('Created new session:', activeSessionId);
+                } else {
+                    console.log('创建会话失败');
+                    return;
+                }
+            }
+            // 发送消息后，输入框移到底部
+            inputArea.classList.remove('center');
+            
+            appendMessage(selectedFile ? `${promptText}\n\n[已上传文件：${selectedFile.name}]` : promptText, 'user');
+            userInput.value = '';
+            adjustTextareaHeight();
+
+            const botMessageElement = appendMessage('', 'bot');
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            botMessageElement.appendChild(cursor);
+
+             const formData = new FormData();
+             formData.append('prompt', promptText);
+             formData.append('sessionId', activeSessionId);
+             if (selectedFile) {
+                 formData.append('file', selectedFile, selectedFile.name);
+             }
+             clearSelectedFile();
+
+             try {
+                 const response = await fetch(`${API_BASE_URL}/chat`, { method: 'POST', body: formData });
+                 if (!response.ok) {
+                     const detail = await response.text().catch(() => '');
+                     throw new Error(detail || `请求失败：${response.status}`);
+                 }
+                 if (!response.body) {
+                     throw new Error('浏览器不支持流式响应');
+                 }
+
+                 botMessageElement.textContent = '';
+                 const reader = response.body.getReader();
+                 const decoder = new TextDecoder();
+                 let buffer = '';
+
+                 while (true) {
+                    const { value, done } = await reader.read();
+                    buffer += decoder.decode(value || new Uint8Array(), { stream: !done }).replace(/\r\n/g, '\n');
+                    const events = buffer.split('\n\n');
+                    buffer = events.pop() || '';
+                    if (done && buffer.trim()) {
+                        events.push(buffer);
+                        buffer = '';
+                    }
+
+                    for (const eventText of events) {
+                        const data = eventText
+                            .split('\n')
+                            .filter(line => line.startsWith('data:'))
+                            .map(line => line.substring(5).trimStart())
+                            .join('\n');
+                        if (!data) continue;
+                        if (data.trim() === '[DONE]') return;
+                        botMessageElement.appendChild(document.createTextNode(data));
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+
+                    if (done) break;
+                }
+            } catch (error) {
+                console.error('发送消息失败:', error);
+                botMessageElement.textContent = `请求失败：${error.message}`;
+            }
+         }
+
+         function handleFileSelect(input) {
+             currentFile = input.files && input.files.length > 0 ? input.files[0] : null;
+             if (!currentFile) {
+                 clearSelectedFile();
+                 return;
+             }
+             filePreviewName.textContent = currentFile.name;
+             filePreview.classList.add('active');
+         }
+
+         function clearSelectedFile() {
+             currentFile = null;
+             fileInput.value = '';
+             filePreviewName.textContent = '';
+             filePreview.classList.remove('active');
+         }
+
+         function toggleSidebar() {
+             sidebar.classList.toggle('open');
+             backdrop.classList.toggle('active');
+         }
+
+         function adjustTextareaHeight() {
+             userInput.style.height = 'auto';
+             userInput.style.height = (userInput.scrollHeight) + 'px';
+         }
+
+         function handleKeyPress(e) {
+             if (e.key === 'Enter') {
+          // 使用原生的 isComposing 属性，更可靠地检测输入法状态
+    // 当输入法处于活跃状态时，不发送消息，让用户在输入框中看到内容
+    if (e.isComposing || isComposing) {
+      // 输入法正在使用，不阻止默认行为，让输入内容显示到输入框
+      return;
+    }
+
+    if (e.shiftKey) {
+                     // Shift+Enter 换行
+                     e.preventDefault();
+                     const start = userInput.selectionStart;
+                     const end = userInput.selectionEnd;
+                     const value = userInput.value;
+                     userInput.value = value.substring(0, start) + '\n' + value.substring(end);
+                     userInput.selectionStart = userInput.selectionEnd = start + 1;
+                     adjustTextareaHeight();
+                 } else {
+                     // 发送消息
+                     e.preventDefault();
+                     sendMessage();
+                 }
+             }
+         }
+
+         // 输入法开始输入
+         function handleCompositionStart() {
+             isComposing = true;
+         }
+
+         // 输入法结束输入
+         function handleCompositionEnd() {
+             isComposing = false;
+         }
+
+         // 输入框失去焦点时重置输入法状态
+         function handleBlur() {
+             isComposing = false;
+         }
+
+         // --- App Start ---
+         document.addEventListener('DOMContentLoaded', initializeApp);
+
+     </script> 
+ </body> 
+ </html> 
+ 

@@ -1,0 +1,57 @@
+name: Build macOS App
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'FlowerWorldWidget/**'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Install xcodegen
+        run: |
+          if ! command -v xcodegen &> /dev/null; then
+            brew install xcodegen
+          fi
+
+      - name: Generate Xcode project
+        working-directory: FlowerWorldWidget
+        run: xcodegen generate
+
+      - name: Build .app
+        working-directory: FlowerWorldWidget
+        run: |
+          xcodebuild -project "花花世界.xcodeproj" \
+                     -scheme FlowerWorldWidget \
+                     -configuration Release \
+                     -derivedDataPath build/DerivedData \
+                     build
+
+      - name: Package .app as ZIP
+        working-directory: FlowerWorldWidget
+        run: |
+          APP_PATH="build/DerivedData/Build/Products/Release/花花世界.app"
+          if [ -d "$APP_PATH" ]; then
+            ditto -c -k --keepParent "$APP_PATH" "花花世界.zip"
+            echo "✅ 打包成功"
+          else
+            echo "❌ 未找到 .app"
+            exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 花花世界
+          path: FlowerWorldWidget/花花世界.zip
+          if-no-files-found: error

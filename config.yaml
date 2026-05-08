@@ -1,0 +1,56 @@
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: Rule
+log-level: info
+external-controller: 127.0.0.1:9090
+proxies:
+- name: "美国CN2线路 H1"
+  type: vmess
+  server: 183.240.164.187
+  port: 443
+  uuid: 8f28f440-df62-44b4-a4d3-bb35b02d6153
+  alterId: 0
+  cipher: auto
+  tls: true
+  network: ws
+  ws-opts:
+    path: /
+    headers:
+      Host: ''
+- name: "全球通用IEPL专线"
+  type: vmess
+  server: 127.0.0.1
+  port: 45535
+  uuid: 6d22d65a-7c3d-4cd0-923b-b23e-4dcf31ea-c66c
+  alterId: 0
+  cipher: auto
+  tls: false
+  network: tcp
+- name: "新加坡专线"
+  type: vmess
+  server: 127.0.0.1
+  port: 443
+  uuid: 5e44a6-66c9-455d-b53a-9d5b-b53a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9d5b3a-9.
+  alterId: 0
+  cipher: auto
+  tls: true
+  network: ws
+  ws-opts:
+    path: /
+    headers:
+      Host: ''
+proxy-groups:
+- name: PROXY
+  type: select
+  proxies:
+  - "美国CN2线路 H1"
+  - "全球通用IEPL专线"
+  - "新加坡专线"
+  - DIRECT
+rules:
+- DOMAIN-SUFFIX,google.com,PROXY
+- DOMAIN-KEYWORD,google,PROXY
+- DOMAIN,ad.com,REJECT
+- GEOIP,CN,DIRECT
+- MATCH,PROXY
