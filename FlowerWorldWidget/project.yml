@@ -12,10 +12,16 @@ targets:
     type: application
     platform: macOS
     sources:
+  - path: .
+    type: group
+    includes:
       - "*.swift"
-      - Info.plist
-      - index.html
-      - Assets.xcassets
+      - "*.plist"
+      - "*.html"
+    excludes:
+      - "build.sh"
+      - "README.md"
+      - "project.yml"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.flowerworld.menubar
