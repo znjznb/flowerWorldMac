@@ -28,6 +28,18 @@ jobs:
         working-directory: FlowerWorldWidget
         run: xcodegen generate
 
+      - name: Patch project format for Xcode 15 compatibility
+        working-directory: FlowerWorldWidget
+        run: |
+          PBXPROJ="花花世界.xcodeproj/project.pbxproj"
+          if [ -f "$PBXPROJ" ]; then
+            # Change objectVersion from 77 (Xcode 16) to 60 (Xcode 15)
+            sed -i '' 's/objectVersion = 77;/objectVersion = 60;/' "$PBXPROJ"
+            echo "✅ Patched project format to objectVersion 60"
+          else
+            echo "⚠️  project.pbxproj not found, skipping patch"
+          fi
+
       - name: Build .app
         working-directory: FlowerWorldWidget
         run: |
