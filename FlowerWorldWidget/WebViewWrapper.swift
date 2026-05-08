@@ -1,6 +1,31 @@
 import SwiftUI
 import WebKit
 
+// WKWebView subclass that ensures proper IME/input method support
+// in the menu bar popover window
+class IMEWebView: WKWebView {
+    override var acceptsFirstResponder: Bool { true }
+
+    override func becomeFirstResponder() -> Bool {
+        let result = super.becomeFirstResponder()
+        // Force text input context to update for IME
+        if let context = self.inputContext {
+            context.activate()
+        }
+        return result
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        if let window = window {
+            // Ensure the webview window is key-capable for IME
+            DispatchQueue.main.async { [weak self] in
+                self?.window?.makeFirstResponder(self)
+            }
+        }
+    }
+}
+
 struct WebViewWrapper: NSViewRepresentable {
     let backendURL: String
 
@@ -19,12 +44,17 @@ struct WebViewWrapper: NSViewRepresentable {
 
         config.userContentController = userContentController
 
-        let webView = WKWebView(frame: .zero, configuration: config)
+        let webView = IMEWebView(frame: .zero, configuration: config)
         webView.setValue(false, forKey: "drawsBackground")
 
         // Load the bundled HTML file
         if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
             webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
+
+        // Make the webview first responder for proper IME handling
+        DispatchQueue.main.async {
+            webView.window?.makeFirstResponder(webView)
         }
 
         return webView
