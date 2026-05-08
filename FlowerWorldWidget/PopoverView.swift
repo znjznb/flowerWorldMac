@@ -22,15 +22,27 @@ struct PopoverView: View {
                     .buttonStyle(.plain)
                     .foregroundColor(.accentColor)
                 } else {
-                    Button {
-                        pendingURL = settings.backendURL
-                        showingSettings.toggle()
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 12))
+                    HStack(spacing: 4) {
+                        Button {
+                            pendingURL = settings.backendURL
+                            showingSettings.toggle()
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 12))
+                        }
+                        .buttonStyle(.plain)
+                        .help("设置")
+
+                        Button {
+                            NSApplication.shared.terminate(nil)
+                        } label: {
+                            Image(systemName: "power")
+                                .font(.system(size: 11))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
+                        .help("退出")
                     }
-                    .buttonStyle(.plain)
-                    .help("设置")
                 }
             }
             .padding(.horizontal, 16)
