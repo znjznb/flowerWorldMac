@@ -57,6 +57,5 @@ struct PopoverView: View {
                 WebViewWrapper(backendURL: settings.apiBase)
             }
         }
-        .frame(width: 380, height: 520)
     }
 }

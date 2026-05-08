@@ -18,8 +18,8 @@ targets:
           - "build.sh"
           - "README.md"
           - "project.yml"
-      - path: Assets.xcassets
-        type: folder
+          - "*.xcodeproj"
+          - "build"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.flowerworld.menubar
